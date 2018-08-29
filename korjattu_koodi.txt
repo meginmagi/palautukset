@@ -120,31 +120,31 @@ function createResizedImage($OriginalFile,$DestinationFile,$ResizedWidth,$Resize
     
 function luoKansio($MaaKansio,$GalleriaKansio) 
 {  
-	$Ok=FALSE; 
+    $Ok=FALSE; 
   
-	/* luo GalleriaKansio ja pura suojaukset*/
-	$Polku="./sisaltOkuvat/".$MaaKansio."/".$GalleriaKansio;
-	if(mkdir($Polku, 0777)) $Ok=TRUE;
-  
-	/*luo aliKansiot thumbs, upload ja kuvat*/
-	$ThumbPolku=$Polku."/thumbs";
-	$KuvatPolku= $Polku."/kuvat";
-	$UploadPolku= $Polku."/upload";
-	if($Ok)
-	{
-		if(mkdir($ThumbPolku, 0755) && mkdir($KuvatPolku, 0755) && mkdir($UploadPolku, 0755)) $Ok=TRUE;
-	}
-	suojaaKansio($Polku);
-	return $Ok;
-}
+    /* luo GalleriaKansio ja pura suojaukset*/
+    $Polku="./sisaltOkuvat/".$MaaKansio."/".$GalleriaKansio;
+    if(mkdir($Polku, 0777)) $Ok=TRUE;
 
-function puraSuojaus($Kansio)
-{
-	chmod($Kansio, 0777);
-}
+    /*luo aliKansiot thumbs, upload ja kuvat*/
+    $ThumbPolku=$Polku."/thumbs";
+    $KuvatPolku= $Polku."/kuvat";
+    $UploadPolku= $Polku."/upload";
+        if($Ok)
+        {
+            if(mkdir($ThumbPolku, 0755) && mkdir($KuvatPolku, 0755) && mkdir($UploadPolku, 0755)) $Ok=TRUE;
+        }
+    suojaaKansio($Polku);
+    return $Ok;
+    }
 
-function suojaaKansio($Kansio)
-{
-	chmod($Kansio, 0755);
-}
+    function puraSuojaus($Kansio)
+    {
+        chmod($Kansio, 0777);
+    }
+
+    function suojaaKansio($Kansio)
+    {
+        chmod($Kansio, 0755);
+    }
 ?>
