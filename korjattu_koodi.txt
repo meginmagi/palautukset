@@ -1,0 +1,150 @@
+<?php
+/* func_gallery.php
+Gallerian funktiot
+*/
+function imageInformation($OriginalFile)
+{
+    // Ottaa tarkistettavan tiedoston nimen ja tarkistaa sen tiedostopäätteen välittämättä tiedostonimestä, toimii kuville
+    $Type = getImagesize($OriginalFile);
+    $Filesize = Filesize($OriginalFile);
+   
+    // Tarkistetaan tiedoston tyyppi
+    if($Type[2] == 1) // GIF
+    {
+        $FileExtension = "gif";
+        }
+    elseif($Type[2] == 2) // JPEG
+    {
+        $FileExtension = "jpg";
+        }
+    elseif($Type[2] == 3) // PNG
+    {
+        $FileExtension = "png";
+        }
+    else // Tiedostomuoto ei ole tuettu, palauttaa FALSE
+    {
+        $FileExtension = FALSE;
+        }
+    // Funktio palauttaa arvot, jos Ok
+    if($FileExtension)
+    {
+        // palauttaa Type,tiedostopääte,leveys,korkeus,tiedostOkOko
+        return array($Type[2],$FileExtension,$Type[0],$Type[1],$Filesize);
+        }
+    else
+    {
+        // Tiedostotyyppi ei ole tuettu tai jotain häiriöö
+        return array(FALSE,FALSE,FALSE,FALSE);
+        }
+    }
+
+function createResizedImage($OriginalFile,$DestinationFile,$ResizedWidth,$ResizedHeight)
+{
+    // Ottaa syötteenä vastaan (alkuperäinen tiedosto), (uuden kuvan hakemisto/tiedosto ilman päätettä), (uusi leveys), (uusi korkeus)
+   
+    // Selvitetään kuvan koko ja tyyppi
+    list($OriginalWidth, $OriginalHeight, $Type) = getImagesize($OriginalFile);
+   
+    // Tarkistetaan tiedoston tyyppi
+    if($Type == 1) // GIF
+    {
+        $OriginalImage = Imagecreatefromgif($OriginalFile);
+            // Läpinäkyvyys -> valkoinen
+            $White = Imagecolorallocate($OriginalImage, 255, 255, 255);
+            $Transparent = ImagecolorTransparent($OriginalImage, $White);
+        }
+    elseif($Type == 2) // JPEG
+    {
+        $OriginalImage = Imagecreatefromjpeg($OriginalFile);
+        }
+    elseif($Type == 3) // PNG
+    {
+        $OriginalImage = Imagecreatefrompng($OriginalFile);
+        }
+    else // Tiedostomuoto ei ole tuettu, palauttaa FALSE
+    {
+        $Type = FALSE;
+        }
+    if($Type)
+    {
+        // Lasketaan kuvalle uusi kOko siten, että kuvasuhde säilyy
+        $New_W = $OriginalWidth/$ResizedWidth; // Kuvasuhde: leveys
+        $New_H = $OriginalHeight/$ResizedHeight; // Kuvasuhde: korkeus
+        if($New_W > $New_H || $New_W == $New_H)
+        {
+            if($New_W < 1)
+            {
+                // Jos alkuperäinen kuva on pienempi kuin luotava, luodaan alkuperäisen kOkoinen kuva
+                $New_W = 1;
+                }
+            // Käytetään sitä suhdetta, jolla tulee max. asetettu leveys, korkeus on alle max.
+            $New_Width = $OriginalWidth / $New_W;
+            $New_Height = $OriginalHeight / $New_W;
+            }
+        elseif($New_W < $New_H)
+        {
+            if($New_H < 1)
+            {
+                // Jos alkuperäinen kuva on pienempi kuin luotava, luodaan alkuperäisen kOkoinen kuva
+                $New_H = 1;
+                }
+            // Käytetään sitä suhdetta, jolla tulee max. asetettu korkeus, leveys on alle max.
+            $New_Width = $OriginalWidth / $New_H;
+            $New_Height = $OriginalHeight / $New_H;
+            }
+        // Luodaan kuva, jOka on määrätyn kOkoinen
+        $Image = Imagecreatetruecolor($New_Width, $New_Height);
+        // Resample, luo uuden kuvan tiedostoon
+        Imagecopyresampled($Image, $OriginalImage, 0, 0, 0, 0, $New_Width, $New_Height, $OriginalWidth, $OriginalHeight);
+       
+        // Tallennetaan uusi kuva määriteltyyn tiedostoon ja annetaan sopiva tiedostopääte
+        if($Type == 1) // GIF
+        {
+            Imagegif($Image, $DestinationFile);
+            }
+        elseif($Type == 2) // JPEG
+        {
+            Imagejpeg($Image, $DestinationFile);
+            }
+        elseif($Type == 3) // PNG
+        {
+            Imagepng($Image, $DestinationFile);
+            }
+    }
+    // Poistetaan kuva muistista, ei tuhoa alkuperäistä tiedostoa!
+    Imagedestroy($Image);
+    // Palauttaa tiedostotyypin onnistuessaan, FALSE jos ei onnistu
+    return $Type;
+    }
+    
+    
+function luoKansio($MaaKansio,$GalleriaKansio) 
+{  
+	$Ok=FALSE; 
+  
+	/* luo GalleriaKansio ja pura suojaukset*/
+	$Polku="./sisaltOkuvat/".$MaaKansio."/".$GalleriaKansio;
+	if(mkdir($Polku, 0777)) $Ok=TRUE;
+  
+	/*luo aliKansiot thumbs, upload ja kuvat*/
+	$ThumbPolku=$Polku."/thumbs";
+	$KuvatPolku= $Polku."/kuvat";
+	$UploadPolku= $Polku."/upload";
+	if($Ok)
+	{
+		if(mkdir($ThumbPolku, 0755) && mkdir($KuvatPolku, 0755) && mkdir($UploadPolku, 0755)) $Ok=TRUE;
+	}
+	suojaaKansio($Polku);
+	return $Ok;
+}
+
+function puraSuojaus($Kansio)
+{
+	chmod($Kansio, 0777);
+}
+
+function suojaaKansio($Kansio)
+{
+	chmod($Kansio, 0755);
+}
+?>
