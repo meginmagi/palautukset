@@ -1,0 +1,13 @@
+Code smells by Adrian.
+
+Code smells are unnecessarily messy bits of code that can jeopardize the functionality, security, stability
+and general performance of a program, webpage, function or other computer software where it appears as well
+as make working on the code itself difficult for human beings when attempting to correct said smelly parts.
+
+A logical, methodical and practical approach with written guidelines and memos are what will
+protect a programmer from themselves and help create a functional, simpler program which won't require
+days/weeks/months for another programmer or the original programmer to fix.
+
+All it takes is a few comments and the merging of similar functions while getting rid of redundant ones.
+
+Sounds easy, right? It is easy if you avoid them completely from the start.
