@@ -1,0 +1,9 @@
+Laatu varmistetaan etukäteen laatimalla ohjelmoijille säännöt ja määräykset, sekä varmistetaan projektin alussa
+että kaikki ohjelmoijat ymmärtävät tuotteen konseptin ja käyttötarkoituksen.
+
+Tuotetta testataan säännöllisesti teon aikana. 1 tai 2 muuta ohjelmoijaa voivat yhdessä tarkistaa
+ja korjata mahdollisia virheitä.
+
+Loppuvaiheessa tuotetta testataan monipuolisesti ja varmistetaan, että tuote toimii asiakkaan toiveitten
+mukaisesti samalla täyttäen kaikki turvallisuus vaatimukset sekä mahdollisen yhteensopivuuden vanhemman
+järjestelmän kanssa.
